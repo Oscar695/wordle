@@ -4,30 +4,63 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [currentGuess, setCurrentGuess] = useState("")
+  const [guesses, setGuesses] = useState([])
+
+
+  const createRow = (rowIndex) => {
+    const boxes = []
+
+    for (let i = 0; i < 5; i++) {
+      const box = <div className="letterBox">{(guesses[rowIndex] ? guesses[rowIndex][i]: "")}</div>
+      boxes.push(box)
+    }
+    return boxes
+  }
+
+  // if answer[] === guesses[][] add className green
+  // else if answer.includes(guesses[][]) add className yellow
+  // else add className grey
+
+  const createGrid = () => {
+    const grid = []
+
+    for (let i = 0; i < 6; i++) {
+      const row = <div className="boxRow">{createRow(i)}</div>
+      grid.push(row)
+    }
+    return grid
+  }
+
+const onSubmitGuess = (event) => {
+  event.preventDefault()
+  setGuesses([...guesses, currentGuess])
+  setCurrentGuess("")
+}
+
+const onImputChange = (event) => {
+  let value = event.target.value
+  value = value.replace(/[^A-Za-z]/ig, "")
+  setCurrentGuess(value.toUpperCase())
+}
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {createGrid()}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      
+      <form onSubmit={onSubmitGuess}>
+        <div className="imputbox"> 
+          <input type="text" value={currentGuess} id="guessImput" onChange={onImputChange} maxLength={5} minLength={5} />
+        </div> 
+
+        <div>
+          <button onClick={() => console.log("clicked")}>
+            Submit
+          </button>
+        </div> 
+      </form>
     </>
   )
 }
