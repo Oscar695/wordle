@@ -1,18 +1,25 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { getLetterResult } from './logic/wordlelogic'
+import wordList from './assets/WORDS.txt?raw'
 
 function App() {
   const [currentGuess, setCurrentGuess] = useState("")
   const [guesses, setGuesses] = useState([])
   const [hasWon, setHasWon] = useState(false)
-  const answer = "HELLO"
+  const [answer, setAnswer] = useState("")
+  const [invalidWord, setInvalidWord] = useState(false)
+
+  useEffect(() => {
+    const list = wordList.split("\n")
+    const result = list[Math.floor(Math.random() * list.length)]
+    setAnswer(result.toUpperCase())
+    console.log(result)
+  }, [])
 
   const createRow = (rowIndex) => {
     const boxes = []
- 
-    
-   
+
     for (let i = 0; i < 5; i++) {
       const letterInBox = guesses[rowIndex] ? guesses[rowIndex][i]: " "
       const boxClass = "letterBox" + " " + getLetterResult(i, answer, letterInBox)
@@ -35,13 +42,14 @@ function App() {
 const onSubmitGuess = (event) => {
   event.preventDefault()
   if (currentGuess.length !== 5) return 
+  if (!list.includes(currentGuess)) setInvalidWord(true)
   setGuesses([...guesses, currentGuess])
   setHasWon(currentGuess === answer)
   setCurrentGuess("")
 }
 
 const onImputChange = (event) => {
-  if (hasWon === true) return
+  if (hasWon === true) return 
   let value = event.target.value
   value = value.replace(/[^A-Za-z]/ig, "")
   setCurrentGuess(value.toUpperCase())
@@ -52,7 +60,8 @@ const onImputChange = (event) => {
 
 
       <div>
-      {(hasWon) ? <p className="empty-line">"You Win"</p> : null}
+      {(hasWon) ? <p className="empty-line">You Win</p> : null}
+      {(invalidWord) ? <p className="empty-line">Enter valid word</p> : null}
       </div>
       <div>
         {createGrid()}
