@@ -1,19 +1,17 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { getLetterResult } from './logic/wordlelogic'
 
 function App() {
   const [currentGuess, setCurrentGuess] = useState("")
   const [guesses, setGuesses] = useState([])
-
+  const [hasWon, setHasWon] = useState(false)
   const answer = "HELLO"
 
   const createRow = (rowIndex) => {
     const boxes = []
  
-
+    
    
     for (let i = 0; i < 5; i++) {
       const letterInBox = guesses[rowIndex] ? guesses[rowIndex][i]: " "
@@ -38,10 +36,12 @@ const onSubmitGuess = (event) => {
   event.preventDefault()
   if (currentGuess.length !== 5) return 
   setGuesses([...guesses, currentGuess])
+  setHasWon(currentGuess === answer)
   setCurrentGuess("")
 }
 
 const onImputChange = (event) => {
+  if (hasWon === true) return
   let value = event.target.value
   value = value.replace(/[^A-Za-z]/ig, "")
   setCurrentGuess(value.toUpperCase())
@@ -49,6 +49,11 @@ const onImputChange = (event) => {
 
   return (
     <>
+
+
+      <div>
+      {(hasWon) ? <p className="empty-line">"You Win"</p> : null}
+      </div>
       <div>
         {createGrid()}
       </div>
