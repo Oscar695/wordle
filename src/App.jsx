@@ -2,25 +2,27 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { getLetterResult } from './logic/wordlelogic'
 
 function App() {
   const [currentGuess, setCurrentGuess] = useState("")
   const [guesses, setGuesses] = useState([])
 
+  const answer = "HELLO"
 
   const createRow = (rowIndex) => {
     const boxes = []
+ 
 
+   
     for (let i = 0; i < 5; i++) {
-      const box = <div className="letterBox">{(guesses[rowIndex] ? guesses[rowIndex][i]: "")}</div>
+      const letterInBox = guesses[rowIndex] ? guesses[rowIndex][i]: " "
+      const boxClass = "letterBox" + " " + getLetterResult(i, answer, letterInBox)
+      const box = <div className={boxClass}>{letterInBox}</div>
       boxes.push(box)
     }
     return boxes
   }
-
-  // if answer[] === guesses[][] add className green
-  // else if answer.includes(guesses[][]) add className yellow
-  // else add className grey
 
   const createGrid = () => {
     const grid = []
@@ -34,6 +36,7 @@ function App() {
 
 const onSubmitGuess = (event) => {
   event.preventDefault()
+  if (currentGuess.length !== 5) return 
   setGuesses([...guesses, currentGuess])
   setCurrentGuess("")
 }
@@ -52,7 +55,7 @@ const onImputChange = (event) => {
       
       <form onSubmit={onSubmitGuess}>
         <div className="imputbox"> 
-          <input type="text" value={currentGuess} id="guessImput" onChange={onImputChange} maxLength={5} minLength={5} />
+          <input type="text" value={currentGuess} id="guessImput" onChange={onImputChange} maxLength={5} />
         </div> 
 
         <div>
