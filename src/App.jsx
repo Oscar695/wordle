@@ -71,8 +71,9 @@ const onImputChange = (event) => {
       {(invalidWord) ? <p className="result-text">Enter valid word</p> : null}
       {(loss) ? <p className="result-text">You lose the answer was {answer}</p> : null}
       </div>
-      <div className="grid">
-        {createGrid()}
+
+      <div>
+          {createGrid()}
       </div>
       
       <form onSubmit={onSubmitGuess}>
