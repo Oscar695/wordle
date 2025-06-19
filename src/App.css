@@ -5,12 +5,16 @@
   text-align: center;
 }
 
+.imputBox {
+  text-align: center;
+}
+
 .letterBox {  
   height: 2em;
   width: 2em;
   border: 0.1em solid black;
   margin: 0.1em;
-  color: aqua;
+  color: black;
 }
 
 .boxRow {
@@ -28,4 +32,8 @@
 
 .grey {
   background-color: gray;
+}
+
+.result-text {
+  text-align: center;
 }

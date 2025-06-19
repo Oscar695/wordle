@@ -9,9 +9,11 @@ function App() {
   const [hasWon, setHasWon] = useState(false)
   const [answer, setAnswer] = useState("")
   const [invalidWord, setInvalidWord] = useState(false)
+  const [loss, setLoss] = useState(false)
+
+  const list = wordList.split("\n")
 
   useEffect(() => {
-    const list = wordList.split("\n")
     const result = list[Math.floor(Math.random() * list.length)]
     setAnswer(result.toUpperCase())
     console.log(result)
@@ -42,14 +44,19 @@ function App() {
 const onSubmitGuess = (event) => {
   event.preventDefault()
   if (currentGuess.length !== 5) return 
-  if (!list.includes(currentGuess)) setInvalidWord(true)
+  if (!list.includes(currentGuess.toLowerCase())) setInvalidWord(true)
+  if (!list.includes(currentGuess.toLowerCase())) return
   setGuesses([...guesses, currentGuess])
   setHasWon(currentGuess === answer)
+  if (currentGuess === answer) setInvalidWord(false)
+  if ((currentGuess !== answer) & (guesses.length >= 5)) setLoss(true)
   setCurrentGuess("")
 }
 
 const onImputChange = (event) => {
-  if (hasWon === true) return 
+  if (guesses.length >= 6) return
+  if (hasWon === true) return
+  if (list.includes(currentGuess)) setInvalidWord(false) 
   let value = event.target.value
   value = value.replace(/[^A-Za-z]/ig, "")
   setCurrentGuess(value.toUpperCase())
@@ -60,10 +67,11 @@ const onImputChange = (event) => {
 
 
       <div>
-      {(hasWon) ? <p className="empty-line">You Win</p> : null}
-      {(invalidWord) ? <p className="empty-line">Enter valid word</p> : null}
+      {(hasWon) ? <p className="result-text">You Win</p> : null}
+      {(invalidWord) ? <p className="result-text">Enter valid word</p> : null}
+      {(loss) ? <p className="result-text">You lose the answer was {answer}</p> : null}
       </div>
-      <div>
+      <div className="grid">
         {createGrid()}
       </div>
       
